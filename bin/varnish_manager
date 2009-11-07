@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+from varnish import VarnishManager
+from pprint import pprint
+
+manager = VarnishManager((raw_input('Varnish Management Address (ip:port): '),))
+
+while 1:
+    try:
+        i = raw_input('varnish> ')
+    except (EOFError, KeyboardInterrupt):
+        break
+    if i.startswith('quit') or i.startswith('exit'):
+        break
+    pprint(manager.run(*i.split()))
+
+manager.close()
