@@ -11,10 +11,17 @@ Varnish provides a simple telnet management interface for doing things like:
   *  start and stop the server
 
 This Python API takes full advantage of the available commands and can run
-across multiple Varnish instances
+across multiple Varnish instances. Here are the features of this python module
+(compared to [python-varnishadm](http://varnish.projects.linpro.no/browser/trunk/varnish-tools/python-varnishadm/)):
+
+  *  Uses `telnetlib` instead of raw sockets
+  *  Implements `threading` module
+  *  Can run commands across multiple Varnish instances
+  *  More comprehensive methods, closely matching the management API (`purge_*`, `vcl_*`, etc.)
+  *  Unittests
 
 Example:
 
-    >>> manager = VarnishManager( ('server1:82', 'server2:82') )
-    >>> print manager.run('stats')
+    >>> manager = VarnishManager( ('server1:6082', 'server2:6082') )
+    >>> print manager.run('purge.url', '^/$')
     >>> manager.close()
