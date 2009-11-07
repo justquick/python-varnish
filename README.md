@@ -23,5 +23,5 @@ across multiple Varnish instances. Here are the features of this python module
 Example:
 
     >>> manager = VarnishManager( ('server1:6082', 'server2:6082') )
-    >>> print manager.run('purge.url', '^/$')
+    >>> manager.run('purge.url', '^/$')
     >>> manager.close()
