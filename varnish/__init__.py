@@ -126,7 +126,8 @@ def run(addr, *commands):
 
 class VarnishManager(object):
     def __init__(self, servers):
-        assert len(servers), 'No servers found, please declare some'
+        if not len(servers):
+            print 'WARNING: No servers found, please declare some'
         self.servers = servers
             
     def run(self, *commands, **kwargs):
