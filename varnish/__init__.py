@@ -3,6 +3,13 @@ Simple Python interface for the Varnish management port.
 """
 from telnetlib import Telnet
 from threading import Thread
+import logging
+
+import logging
+logging.basicConfig(
+    level = logging.DEBUG,
+    format = '%(asctime)s %(levelname)s %(message)s',
+)
 
 class VarnishHandler(Telnet):
     def __init__(self, host_port_timeout):
@@ -15,13 +22,15 @@ class VarnishHandler(Telnet):
     def fetch(self, command):
         """
         Run a command on the Varnish backend and return the result
-        return value is a tuple of ( (status, length), content )
+        return value is a tuple of ((status, length), content)
         """
+        logging.debug('SENT: %s: %s' % (self.host, command))
         self.write('%s\n' % command)
         (status, length), content = map(int, self.read_until('\n').split()), ''
         assert status == 200, 'Bad response code: %s %s' % (status, self.read_until('\n').rstrip())
         while len(content) < length:
             content += self.read_until('\n')
+        logging.debug('RECV: %s: %dB %s' % (status,length,content[:30]))
         return (status, length), content
         
     # Service control methods
@@ -120,7 +129,8 @@ def run(addr, *commands):
         if isinstance(cmd, tuple) and len(cmd)>1:
             results.extend([getattr(handler, c[0].replace('.','_'))(*c[1:]) for c in cmd])
         else:
-            results.append(getattr(handler, cmd.replace('.','_'))())
+            results.append(getattr(handler, cmd.replace('.','_'))(*commands[1:]))
+            break
     handler.close()
     return results
 
@@ -136,7 +146,7 @@ class VarnishManager(object):
         else:                
             return [run(server, *commands) for server in self.servers]
 
-    def help(self, command=None): return self.servers[0].help(command)
+    def help(self, *args): return run(self.servers[0], *('help',)+args)[0]
 
     def close(self):
         self.run('close', threaded=True)
