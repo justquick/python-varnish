@@ -1,6 +1,15 @@
 Simple Python interface for the Varnish management port
 =========================================================
 
+
+:Author:
+   Justin Quick <justquick@gmail.com>,
+:Version: 0.1
+
+::
+
+    pip install python-varnish==0.1.1
+
 Varnish is a state-of-the-art, high-performance HTTP accelerator.
 For more information checkout `Varnish Site <http://varnish.projects.linpro.no/>`_
 
