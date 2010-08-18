@@ -5,7 +5,6 @@ from telnetlib import Telnet
 from threading import Thread
 import logging
 
-import logging
 logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
