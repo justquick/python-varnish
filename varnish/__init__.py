@@ -11,9 +11,10 @@ logging.basicConfig(
 )
 
 class VarnishHandler(Telnet):
-    def __init__(self, host_port_timeout):
+    def __init__(self, host_port_timeout, **opts):
         if isinstance(host_port_timeout, basestring):
             host_port_timeout = host_port_timeout.split(':')
+        self.secret = opts.get('secret', None)
         Telnet.__init__(self, *host_port_timeout)
         
     def quit(self): self.close()
@@ -104,13 +105,14 @@ class ThreadedRunner(Thread):
     """
     Runs commands on a particular varnish server in a separate thread
     """
-    def __init__(self, addr, *commands):
+    def __init__(self, addr, *commands, **opts):
         self.addr = addr
         self.commands = commands
+        self.opts = opts
         super(ThreadedRunner, self).__init__()
         
     def run(self):
-        handler = VarnishHandler(self.addr)
+        handler = VarnishHandler(self.addr, **self.opts)
         for cmd in self.commands:
             if isinstance(cmd, tuple) and len(cmd)>1:
                 getattr(handler, cmd[0].replace('.','_'))(*cmd[1:])
@@ -118,12 +120,12 @@ class ThreadedRunner(Thread):
                 getattr(handler, cmd.replace('.','_'))()
         handler.close()
 
-def run(addr, *commands):
+def run(addr, *commands, **opts):
     """
     Non-threaded batch command runner returning output results
     """
     results = []
-    handler = VarnishHandler(addr)
+    handler = VarnishHandler(addr, **opts)
     for cmd in commands:
         if isinstance(cmd, tuple) and len(cmd)>1:
             results.extend([getattr(handler, c[0].replace('.','_'))(*c[1:]) for c in cmd])
@@ -141,9 +143,9 @@ class VarnishManager(object):
             
     def run(self, *commands, **kwargs):
         if kwargs.pop('threaded', False):
-            [ThreadedRunner(server, *commands).start() for server in self.servers]
+            [ThreadedRunner(server, *commands, **opts).start() for server in self.servers]
         else:                
-            return [run(server, *commands) for server in self.servers]
+            return [run(server, *commands, **opts) for server in self.servers]
 
     def help(self, *args): return run(self.servers[0], *('help',)+args)[0]
 
