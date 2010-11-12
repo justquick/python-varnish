@@ -11,21 +11,35 @@ logging.basicConfig(
 )
 
 class VarnishHandler(Telnet):
+    banner=None
     def __init__(self, host_port_timeout):
         if isinstance(host_port_timeout, basestring):
             host_port_timeout = host_port_timeout.split(':')
         Telnet.__init__(self, *host_port_timeout)
         
     def quit(self): self.close()
-        
+    
     def fetch(self, command):
         """
         Run a command on the Varnish backend and return the result
         return value is a tuple of ((status, length), content)
         """
         logging.debug('SENT: %s: %s' % (self.host, command))
+        if not self.banner:
+            (status, length), banner = map(int, self.read_until('\n').split()), ''
+            assert status == 200, 'Bad response code: %s %s' % (status, self.read_until('\n').rstrip())
+            while len(banner) < length:
+                banner += self.read_until('\n')
+            self.banner = banner
+            
         self.write('%s\n' % command)
-        (status, length), content = map(int, self.read_until('\n').split()), ''
+        while True:
+            try:
+                (status, length), content = map(int, self.read_until('\n').split()), ''
+                break
+            except:
+                pass
+    
         assert status == 200, 'Bad response code: %s %s' % (status, self.read_until('\n').rstrip())
         while len(content) < length:
             content += self.read_until('\n')
