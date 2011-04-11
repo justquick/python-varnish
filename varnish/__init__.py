@@ -15,7 +15,9 @@ class VarnishHandler(Telnet):
         if isinstance(host_port_timeout, basestring):
             host_port_timeout = host_port_timeout.split(':')
         Telnet.__init__(self, *host_port_timeout)
-        
+        # Eat the preamble ...
+        self.read_until("Type 'quit' to close CLI session.\n\n")
+
     def quit(self): self.close()
         
     def fetch(self, command):
