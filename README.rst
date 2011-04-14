@@ -3,7 +3,7 @@ Simple Python interface for the Varnish management port
 
 
 :Author:
-   Justin Quick <justquick@gmail.com>,
+   Justin Quick <justquick@gmail.com>, Sandy Walsh <github@darksecretsoftware.com>
 :Version: 0.1
 
 ::
