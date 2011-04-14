@@ -1,10 +1,11 @@
 from varnish import VarnishManager
 import unittest
 
+ADDR = raw_input('Varnish Management Address (ip:port): ')
 
 class VarnishTests(unittest.TestCase):
     def setUp(self):
-        self.manager = VarnishManager((raw_input('Varnish Management Address (ip:port): '),))
+        self.manager = VarnishManager((ADDR,))
     
     def test_ping(self):
         result = self.manager.run('ping')[0][0]
