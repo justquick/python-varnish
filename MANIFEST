@@ -1,0 +1,5 @@
+README.rst
+LICENSE.txt
+setup.py
+varnish.py
+bin/varnish_manager

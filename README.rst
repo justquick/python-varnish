@@ -8,7 +8,7 @@ Simple Python interface for the Varnish management port
 
 ::
 
-    pip install python-varnish==0.1.1
+    pip install python-varnish==0.1.2
 
 Varnish is a state-of-the-art, high-performance HTTP accelerator.
 For more information checkout `Varnish Site <http://varnish.projects.linpro.no/>`_
@@ -35,3 +35,7 @@ Example::
   manager = VarnishManager( ('server1:6082', 'server2:6082') )
   manager.run('purge.url', '^/$')
   manager.close()
+  
+Testing::
+
+  python runtests.py
