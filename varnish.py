@@ -64,7 +64,7 @@ class VarnishHandler(Telnet):
         return self.fetch('vcl.inline %s %s' % (configname, vclcontent))
 
     def vcl_show(self, configname):
-        return self.fetch('vcl.show' % configname)
+        return self.fetch('vcl.show %s' % configname)
     
     def vcl_use(self, configname):
         return self.fetch('vcl.use %s' % configname)
