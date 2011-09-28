@@ -27,11 +27,17 @@ class VarnishHandler(Telnet):
         """
         logging.debug('SENT: %s: %s' % (self.host, command))
         self.write('%s\n' % command)
-        (status, length), content = map(int, self.read_until('\n').split()), ''
-        assert status == 200, 'Bad response code: %s %s' % (status, self.read_until('\n').rstrip())
+        while 1:
+                buffer = self.read_until('\n').strip()
+                if len(buffer):
+                    break
+        status, length = map(int, buffer.split())
+        content = ''
+        assert status == 200, 'Bad response code: {status} {text} ({command})'.format(status=status, text=self.read_until('\n').strip(), command=command)
         while len(content) < length:
             content += self.read_until('\n')
         logging.debug('RECV: %s: %dB %s' % (status,length,content[:30]))
+        self.read_eager()
         return (status, length), content
         
     # Service control methods
