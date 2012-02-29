@@ -89,6 +89,9 @@ class VarnishHandler(Telnet):
         self.fetch('param.set %s %s' % (param, value))
 
     # Purge methods
+    def ban_url(self, regex):
+        return self.fetch('ban.url %s' % regex)[1]
+    
     def purge_url(self, regex):
         return self.fetch('purge.url %s' % regex)[1]
 
