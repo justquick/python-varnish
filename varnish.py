@@ -4,7 +4,6 @@ Simple Python interface for the Varnish management port.
 from telnetlib import Telnet
 from threading import Thread
 import logging
-from hashlib import sha256
 
 logging.basicConfig(
     level = logging.DEBUG,
@@ -43,9 +42,17 @@ class VarnishHandler(Telnet):
         """
         logging.debug('SENT: %s: %s' % (self.host, command))
         self.write('%s\n' % command)
-        (status, length), content = self._read()
-        assert status == 200, 'Bad response code: %s %s' % (status, content)
+        while 1:
+                buffer = self.read_until('\n').strip()
+                if len(buffer):
+                    break
+        status, length = map(int, buffer.split())
+        content = ''
+        assert status == 200, 'Bad response code: {status} {text} ({command})'.format(status=status, text=self.read_until('\n').strip(), command=command)
+        while len(content) < length:
+            content += self.read_until('\n')
         logging.debug('RECV: %s: %dB %s' % (status,length,content[:30]))
+        self.read_eager()
         return (status, length), content
 
     # Service control methods
