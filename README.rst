@@ -10,7 +10,7 @@ Simple Python interface for the Varnish management port
 
     pip install python-varnish==0.2.0
 
-.. note:: If you are running a version of varnish older than 3.0 then install python-varnish==0.1.2 instead.
+If you are running a version of varnish older than 3.0 then install python-varnish==0.1.2 instead.
 
 Varnish is a state-of-the-art, high-performance HTTP accelerator.
 For more information checkout `Varnish Site <http://varnish.projects.linpro.no/>`_
