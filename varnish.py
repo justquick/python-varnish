@@ -43,6 +43,20 @@ logging.basicConfig(
     format = '%(asctime)s %(levelname)s %(message)s',
 )
 
+def http_purge_url(url):
+    """
+    Do an HTTP PURGE of the given asset.
+    The URL is run through urlparse and must point to the varnish instance not the varnishadm
+    """
+    url = urlparse(url)
+    connection = HTTPConnection(url.hostname, url.port or 80)
+    connection.request('PURGE', '%s?%s' % (url.path or '/', url.query), '',
+                      {'Host': url.hostname})
+    response = connection.getresponse()
+    if response.status != 200:
+        logging.error('Purge failed with status: %s' % response.status)
+    return response
+
 class VarnishHandler(Telnet):
     def __init__(self, host_port_timeout, secret=None, **kwargs):
         if isinstance(host_port_timeout, basestring):
@@ -240,6 +254,11 @@ class VarnishHandler(Telnet):
         """
         return self.fetch('ban.list')[1]
 
+    def purge_url(self, url):
+        """
+        Wrapper for http_purge_url
+        """
+        return http_purge_url(url)
 
 
 class ThreadedRunner(Thread):
@@ -299,16 +318,4 @@ class VarnishManager(object):
         self.run('close', threaded=True)
         self.servers = ()
 
-    def purge_url(self, url):
-        """
-        Do an HTTP PURGE of the given asset.
-        The URL is run through urlparse and must point to the varnish instance not the varnishadm
-        """
-        url = urlparse(url)
-        connection = HTTPConnection(url.hostname, url.port or 80)
-        connection.request('PURGE', '%s?%s' % (url.path or '/', url.query), '',
-                          {'Host': url.hostname})
-        response = connection.getresponse()
-        if response.status != 200:
-            logging.error('Purge failed with status: %s' % response.status)
-        return response
+

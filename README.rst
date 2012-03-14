@@ -35,7 +35,10 @@ across multiple Varnish instances. Here are the features of this python module
 Example::
 
   manager = VarnishManager( ('server1:6082', 'server2:6082') )
-  manager.run('purge.url', '^/$')
+  manager.run('ping')
+  manager.run('ban.url ^/secret/$')
+  manager.run('ban.list')
+  manager.run('purge.url', 'http://mydomain.com/articles/.*')
   manager.close()
 
 Testing::

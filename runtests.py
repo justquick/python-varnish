@@ -16,8 +16,9 @@ class VarnishTests(unittest.TestCase):
         self.assert_(map(lambda x: isinstance(x, float), (True,True)))
 
     def test_purge(self):
-        self.assertEqual(self.manager.purge_url(
-            'http://%s/myrandomurl/.*' % WEB_ADDR).status, 200)
+        resp = self.manager.run(
+            'purge.url', 'http://%s/myrandomurl/.*' % WEB_ADDR)[0][0]
+        self.assertEqual(resp.status, 200)
 
     def test_ban(self):
         regex = '^/banned/*'
