@@ -35,6 +35,7 @@ from telnetlib import Telnet
 from threading import Thread
 from httplib import HTTPConnection
 from urlparse import urlparse
+from hashlib import sha256
 import logging
 
 

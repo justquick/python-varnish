@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='python-varnish',
-    version='0.2.0',
+    version='0.2.1',
     long_description=open('README.rst').read(),
     description='Simple Python interface for the Varnish management port',
     author='Justin Quick',

@@ -8,7 +8,7 @@ Simple Python interface for the Varnish management port
 
 ::
 
-    pip install python-varnish==0.2.0
+    pip install python-varnish==0.2.1
 
 If you are running a version of varnish older than 3.0 then install python-varnish==0.1.2 instead.
 
