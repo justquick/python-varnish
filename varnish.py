@@ -159,7 +159,7 @@ class VarnishHandler(Telnet):
         vcl.show configname
             Display the source code for the specified configuration.
         """
-        return self.fetch('vcl.show' % configname)
+        return self.fetch('vcl.show %s' % configname)
 
     def vcl_use(self, configname):
         """
