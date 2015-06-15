@@ -51,8 +51,9 @@ def http_purge_url(url):
     """
     url = urlparse(url)
     connection = HTTPConnection(url.hostname, url.port or 80)
-    connection.request('PURGE', '%s?%s' % (url.path or '/', url.query), '',
-                      {'Host': url.hostname})
+    path = url.path or '/'
+    connection.request('PURGE', '%s?%s' % (path, url.query) if url.query else path, '',
+                       {'Host': '%s:%s' % (url.hostname, url.port) if url.port else url.hostname})
     response = connection.getresponse()
     if response.status != 200:
         logging.error('Purge failed with status: %s' % response.status)
