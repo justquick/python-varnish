@@ -1,10 +1,17 @@
 from varnish import VarnishManager
+import os
 import unittest
 
-ADDR = raw_input('Varnish Management Address (ip:port) [localhost:2000]: ')
-if not ADDR: ADDR = 'localhost:2000'
-WEB_ADDR = raw_input('Varnish Instance Address (ip:port) [localhost:8080]: ')
-if not WEB_ADDR: WEB_ADDR = 'localhost:8080'
+
+ADDR = os.getenv('PYTHON_VARNISH_ADDR')
+if ADDR is None:
+    ADDR = raw_input('Varnish Management Address (ip:port) [localhost:2000]: ')
+    if not ADDR: ADDR = 'localhost:2000'
+
+WEB_ADDR = os.getenv('PYTHON_VARNISH_WEB_ADDR')
+if WEB_ADDR is None:
+    WEB_ADDR = raw_input('Varnish Instance Address (ip:port) [localhost:8080]: ')
+    if not WEB_ADDR: WEB_ADDR = 'localhost:8080'
 
 class VarnishTests(unittest.TestCase):
     def setUp(self):

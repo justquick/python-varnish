@@ -44,3 +44,10 @@ Example::
 Testing::
 
   python runtests.py
+
+You can configure the tests with the two following environment
+variables :
+
+* PYTHON_VARNISH_ADDR
+* PYTHON_VARNISH_WEB_ADDR
+
