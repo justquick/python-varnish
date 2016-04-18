@@ -191,7 +191,7 @@ class VarnishHandler(Telnet):
         vcls = {}
         for line in self.fetch('vcl.list')[1].splitlines():
             a = line.split()
-            vcls[a[2]] = tuple(a[:-1])
+            vcls[a[-1]] = tuple(a[:-1])
         return vcls
 
     # Param methods
