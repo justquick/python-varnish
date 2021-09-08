@@ -170,7 +170,7 @@ class VarnishHandler(Telnet):
         """
         vcl.use configname
             Start using the configuration specified by configname for all new requests.   Existing  requests
-            will coninue using whichever configuration was in use when they arrived.
+            will continue using whichever configuration was in use when they arrived.
         """
         return self.fetch('vcl.use %s' % configname)
 
@@ -254,7 +254,7 @@ class VarnishHandler(Telnet):
             useful unless you're debugging.
 
             A "G" marks that the ban is "Gone". Meaning it has been marked as a duplicate or it is no longer
-            valid. It stays in the list for effiency reasons.
+            valid. It stays in the list for efficiency reasons.
 
             Then follows the actual ban it self.
         """
